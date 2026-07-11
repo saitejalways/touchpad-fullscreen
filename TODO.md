@@ -1,0 +1,29 @@
+Check if all requirements are fulfilled:
+
+- ✓ push edge to scroll is really glitchy in landscape, seems like the coordinates of the calibration get messed up on the one hand, but on the other, initializing push edge to scroll also feels incredibly glitchy
+- ✓ add a toggle to invert vertical scroll
+- ✓ add a toggle to disable edge-push to scroll on the sides(left and right)
+- ✓ Add haptic feedback and intesity configuration for push-edge scroll start
+- ✓ investigating horizonta (left-right edges)l push-edge scroll initialization is a lot easier, than vertical (top-bottom edge)
+- ✓ remove edge scroll vertical/horizontal factor. They should use the main factor setting from two finger scroll
+- ✓ Add a toggle setting: either leave the cursor at the center after edge-scroll, don’t restore it’s last known position OR restore its last known position after edge-scroll
+- ✓ don’t forget that there is a readme in the app as well. I don’t know if it should be a full copy of the main readme, but it should be as user friendly as possible and have a basic setup guide with the accent on adb pairing
+- ✓ we need to update both readmeas to include info - move the calibration button into the scroll settings section- allow any direction scroll, while edge-push scroll is enabled
+- ✓ calibrate a bit more precise
+- ✓ disable user input while calibrating and show a timer overlay on how long the calibration takes
+- ✓ disable edge highliting by default, remove the edge thickness setting from the gui, enable it only if the “Enable debug diag, overlay is enabled)
+- ✓ two-finger scroll grace time should be replaced by two finger scroll grace px (logic and in the gui)
+- ✓ remove corner deadzone for edge push scrolling (logic and from gui)
+- ✓ combine (dis)connect and disable/enable  touch capture into one button that should change colors (red/green). If this will break something, leave as is, but as far as I see it, it shouldn’t
+- ✓ analyze, if the user needs internal endpoint port, if not, remove from gui
+- ✓ remove internal endpoint host setting from gui
+- ✓ update both readmes to be as user friendly as possible, move all technnical details further down
+- ✗ optimize the gui interface for nice UX and design, put each category of settings into a tab, make the enabled/disabled status more user friendly (maybe a big checkmark and cross) with less technical information (show the technical instead in the debug overlay in the upper right corner, just like input monitoring)
+- ✓ fix landscape push-edge-to-scroll
+- ✓ fix push edge-to-scroll not registering at low swipe speeds
+- ✓ we deleted the help_readme file, and we’ll need to restore it 
+- ✓ add a markdown renderer for the built-in help readme md
+- ✓ make the calibration countdown more realistic (it is too short now, either we need to measure a calibration run or replace the concrete time with a filling bar and fill it on steps of the calibration)
+- ✓ go a bit into calibration in both readmes
+- ✓ add the ability to export the current config as an .ini
+- review the code, are all debug features toggelable by the global DEBUG? If not, make them so, and make a seperate build flow for release, where debug is disabled (the option to toggle debug overlay in the GUI should stay)

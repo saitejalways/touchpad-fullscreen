@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Daemon Spike</string>
+    <string name="title">Shell Daemon Connectivity Spike</string>
+    <string name="pairing_section_title">Wireless debugging pairing</string>
+    <string name="pair_port_hint">Pairing port from Wireless Debugging</string>
+    <string name="pair_code_hint">6-digit pairing code</string>
+    <string name="pair_button">Pair Over ADB</string>
+    <string name="launch_daemon">Launch Daemon Over ADB</string>
+    <string name="check_target">Check ADB Target</string>
+    <string name="ping_once">Ping Daemon Once</string>
+    <string name="start_monitor">Start 1s Ping Monitor</string>
+    <string name="stop_monitor">Stop Monitor</string>
+    <string name="stop_daemon">Stop Daemon</string>
+    <string name="reset_token">Reset Token</string>
+    <string name="current_token">Token: %1$s\nPort: %2$d</string>
+</resources>

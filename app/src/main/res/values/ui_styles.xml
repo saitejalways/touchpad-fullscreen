@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.Touchpad.SteelPanel" parent="">
+        <item name="android:textColorPrimary">#10151A</item>
+        <item name="android:textColorSecondary">#1F2831</item>
+        <item name="android:textColorTertiary">#2A333D</item>
+        <item name="android:textColorHint">#414C57</item>
+        <item name="colorOnSurface">#10151A</item>
+        <item name="colorControlNormal">#2F3944</item>
+        <item name="colorControlActivated">#58A8FF</item>
+        <item name="android:textViewStyle">@style/Widget.Touchpad.Steel.TextView</item>
+        <item name="android:editTextStyle">@style/Widget.Touchpad.Steel.EditText</item>
+        <item name="editTextStyle">@style/Widget.Touchpad.Steel.EditText</item>
+        <item name="switchStyle">@style/Widget.Touchpad.Steel.Switch</item>
+    </style>
+
+    <style name="Widget.Touchpad.Steel.TextView" parent="@style/Widget.AppCompat.TextView">
+        <item name="android:textColor">#10151A</item>
+    </style>
+
+    <style name="Widget.Touchpad.Steel.EditText" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:textColor">#10151A</item>
+        <item name="android:textColorHint">#414C57</item>
+    </style>
+
+    <style name="Widget.Touchpad.Steel.Switch" parent="@style/Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:textColor">#10151A</item>
+        <item name="thumbTint">@color/switch_thumb_steel</item>
+        <item name="trackTint">@color/switch_track_steel</item>
+    </style>
+</resources>

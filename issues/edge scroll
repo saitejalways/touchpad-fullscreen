@@ -1,0 +1,126 @@
+# Edge Scroll Investigation: Why Up/Down Scrolling Doesn't Work
+
+## Summary
+
+There are **two independent edge-scroll implementations** that conflict with each other and neither handles top/bottom edge scrolling correctly end-to-end.
+
+---
+
+## The Two Paths
+
+### Path 1: Engine-Side (`TouchpadEngine`)
+
+| Step | What happens |
+|------|-------------|
+| `handleActionDown` | Checks `shouldStartOneFingerEdgeScroll()` — only detects **left/right** edges of the *touchpad screen* |
+| `handleOneFingerEdgeScrollMove` | Only reads `rawDy`, hardcodes `rawDx = 0` — **vertical scroll only** |
+| `buildScrollActions` | Scales, quantizes, emits `InputAction.ScrollBy(0, scaledDy)` |
+| `ActionRouter` | Converts to `AdbCommand.Scroll(0, dy)` |
+| Transport → Server → Executor | `executeScroll(0, dy)` → `dispatchScroll` → `consumeScrollSteps` → HID wheel |
+
+> [!IMPORTANT]
+> **This path only works at the left and right edges of the touchpad!**
+> `shouldStartOneFingerEdgeScroll` (line 665) checks only `event.x` against a zone ratio of the *local screen width*. It has zero logic for top/bottom edges. So there is **no engine-side edge-scroll entry point for top/bottom**.
+
+### Path 2: Executor-Side (`EdgeScrollRouter.route()`)
+
+| Step | What happens |
+|------|-------------|
+| `executeMove` → `edgeScrollRouter.route()` | Checks all 4 edges using `CursorGroundTruth` from `dumpsys` |
+| `EdgeScrollRouter.route()` | Detects top/bottom/left/right edge + pushing direction |
+| `executeScroll(scrollDx, scrollDy)` | Converts routed scroll deltas to HID wheel steps |
+
+> [!WARNING]
+> This path handles all four edges correctly **in theory**, but has critical numerical issues that prevent actual HID wheel output in practice.
+
+---
+
+## Root Cause: The Executor-Side Path Fails Numerically
+
+Here's the critical chain of multiplications that kills scroll output:
+
+### Step 1 — `EdgeScrollRouter` scales the pixel delta by `scrollUnitsPerPixel = 10`
+
+```kotlin
+// EdgeScrollRouter.kt line 76
+val scrollDy = ((-rawScrollDy.toFloat()) * scrollUnitsPerPixel).toInt()
+```
+
+A typical edge-push `dy` might be **1–5 pixels** → `scrollDy` becomes **10–50 command units**.
+
+### Step 2 — `consumeScrollSteps` negates dy again, then checks against a **massive** threshold
+
+```kotlin
+// OnDeviceAdbCommandExecutor.kt line 234
+val vWheel = consumeVerticalDiscreteWheel(-commandDyUnits)
+```
+
+And the threshold is:
+```kotlin
+// line 327
+val safePixels = settingsRepository.verticalScrollPixelsPerStep.value  // default: 40f
+return safePixels * SCROLL_COMMAND_UNITS_PER_PIXEL  // 40 * 10 = 400 units!
+```
+
+### The Math Doesn't Add Up
+
+For the executor-side path:
+- Input: `dy = 3` pixels (a typical small touch delta)
+- After `EdgeScrollRouter`: `scrollDy = -(3) * 10 = -30` command units  
+- After `consumeVerticalDiscreteWheel(-(-30)) = consumeVerticalDiscreteWheel(30)`:
+  - Accumulator gets `+30`, but threshold is `400`
+  - **No wheel step emitted!** Need ~13 consecutive frames of `dy=3` just to emit *one* scroll tick.
+
+For comparison, the **engine-side** two-finger scroll path:
+- Input goes through `buildScrollActions` with `SCROLL_GAIN_FACTOR = 0.10` and `SCROLL_OUTPUT_FIXED_POINT = 100`
+- So `rawDy = 30 px` → `totalDy = -30 * 0.10 * 100 = -300` → already emits values closer to the threshold
+
+**The executor-side edge scroll raw pixel deltas (1–5px) are far too small to ever accumulate past the 400-unit threshold in any reasonable time**, especially when `CLAMP_SCROLL_STEPS_PER_DISPATCH = true` (max 1 step per dispatch).
+
+### Additional Problem: Double Sign Flip
+
+The vertical scroll delta gets negated **twice**:
+
+1. In `EdgeScrollRouter.route()` (line 76): `scrollDy = (-rawScrollDy) * scrollUnitsPerPixel`
+2. In `consumeScrollSteps` (line 234): `vWheel = consumeVerticalDiscreteWheel(-commandDyUnits)`
+
+These two negations cancel out, so the direction mapping is the same as raw `dy`. But the comment says "Match engine convention: finger-up means positive scroll output" — this was designed to match the engine path's convention for two-finger scroll, where `buildScrollActions` also negates `dy`. The double-negation isn't a direction bug but it makes the code confusing.
+
+---
+
+## Why The Engine-Side Path Doesn't Cover Top/Bottom
+
+In `TouchpadEngine.shouldStartOneFingerEdgeScroll`:
+
+```kotlin
+private fun shouldStartOneFingerEdgeScroll(event: MotionEvent): Boolean {
+    if (!settingsRepository.oneFingerEdgeScrollEnabled.value) return false
+    val (boundsWidth, _) = cursorStateStore.boundsSnapshot()
+    val edgeZonePx = (boundsWidth * ONE_FINGER_EDGE_SCROLL_ZONE_RATIO)
+        .coerceIn(ONE_FINGER_EDGE_SCROLL_MIN_PX, ONE_FINGER_EDGE_SCROLL_MAX_PX)
+    return event.x <= edgeZonePx || event.x >= (boundsWidth - edgeZonePx)
+}
+```
+
+This **only checks `event.x`** (horizontal position on the touchpad). It completely ignores `event.y`, so touching the top or bottom of the touchpad never triggers `EdgeScrolling` state.
+
+Even if it did, `handleOneFingerEdgeScrollMove` only passes vertical (`rawDy`) to scroll — which would need to be `rawDx` for top/bottom edges where horizontal scrolling would make more sense, or the logic would need to understand which edge the finger is on.
+
+---
+
+## Conclusion
+
+| Edge | Engine-side path works? | Executor-side path works? |
+|------|------------------------|--------------------------|
+| Left | ✅ Detected + vertical scroll emitted | ⚠️ Detected but deltas too small for threshold |
+| Right | ✅ Detected + vertical scroll emitted | ⚠️ Detected but deltas too small for threshold |
+| Top | ❌ Not detected at all | ⚠️ Detected but deltas too small for threshold |
+| Bottom | ❌ Not detected at all | ⚠️ Detected but deltas too small for threshold |
+
+**Top/bottom edge scrolling fails because:**
+1. The engine-side path (`TouchpadEngine`) doesn't detect top/bottom edges at all
+2. The executor-side path (`EdgeScrollRouter`) detects them correctly, but the scroll deltas produced by small pixel movements (~1-5px) can never accumulate past the `400 command-unit` threshold needed for a single HID wheel step
+
+**To fix this, you would need to either:**
+- Extend `TouchpadEngine.shouldStartOneFingerEdgeScroll` to also detect top/bottom edges via `event.y`, or
+- Fix the executor-side scroll unit scaling so that edge-scroll deltas can actually clear the discrete wheel threshold (e.g., by not applying `SCROLL_COMMAND_UNITS_PER_PIXEL` twice — once in the router and once in the threshold)

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ADB Touchpad</string>
+    <string name="accessibility_service_label">ADB Touchpad Service</string>
+    <string name="accessibility_service_description">Captures full-screen gestures and routes actions over an ADB backend.</string>
+    <string name="touchpad_help_text">Open the in-app guide for pairing, setup, and troubleshooting.</string>
+    <string name="tested_device_note">Validated on Samsung Galaxy S23 Ultra. Other devices may need tuning.</string>
+
+    <string name="runtime_controls_label">Runtime Controls</string>
+    <string name="help_button_label">Open Setup Guide</string>
+    <string name="wireless_pairing_status_title">Wireless debugging paired</string>
+    <string name="wireless_adb_status_title">Wireless ADB enabled</string>
+    <string name="daemon_status_title">Shell daemon connected</string>
+    <string name="accessibility_status_title">Accessibility enabled</string>
+    <string name="status_yes">YES</string>
+    <string name="status_no">NO</string>
+    <string name="status_on">ON</string>
+    <string name="status_off">OFF</string>
+    <string name="status_checking">CHECKING</string>
+
+    <string name="connection_settings_label">Wireless ADB Setup</string>
+    <string name="connection_runtime_header">Daily connection</string>
+    <string name="connection_runtime_description">This app always talks to the local wireless adb target at 127.0.0.1:5555.</string>
+    <string name="connection_pairing_header">Pairing (only when Android asks for it)</string>
+    <string name="connection_pairing_description">Open Android Wireless debugging, tap Pair device with pairing code, then copy the port and 6-digit code here.</string>
+    <string name="pointer_settings_label">Pointer Settings</string>
+    <string name="scroll_settings_label">Scroll Settings</string>
+    <string name="drag_click_settings_label">Click and Drag Settings</string>
+    <string name="haptics_settings_label">Haptic Settings</string>
+    <string name="system_behavior_settings_label">System Integration</string>
+
+    <string name="pairing_port_label">Pairing port (from pairing popup)</string>
+    <string name="pairing_port_hint">e.g. 37099</string>
+    <string name="pairing_code_label">Pairing code (6 digits)</string>
+    <string name="pairing_code_hint">Enter code shown by Android</string>
+    <string name="pair_wireless_button">Pair Wireless Debugging</string>
+
+    <string name="mouse_sensitivity_label">Mouse sensitivity (higher = faster cursor)</string>
+    <string name="mouse_sensitivity_hint">1.0</string>
+    <string name="mouse_acceleration_toggle">Enable mouse acceleration (speed-dependent gain)</string>
+    <string name="hid_move_chunk_size_label">HID move chunk size in px (effective limits: 1..127)</string>
+    <string name="hid_move_chunk_size_hint">8</string>
+    <string name="pointer_move_deadband_label">Pointer move deadband in px (0 disables deadband)</string>
+    <string name="pointer_move_deadband_hint">0.5</string>
+    <string name="calibrate_cursor_button">Calibrate Cursor Center Mapping</string>
+    <string name="clear_calibration_button">Delete All Cursor Calibration Data</string>
+    <string name="export_config_button">Export Current Config (.ini)</string>
+    <string name="experimental_shell_daemon_label">Experimental shell daemon bootstrap</string>
+    <string name="experimental_shell_daemon_description">Starts a shell-owned localhost daemon through the current wireless ADB session, then lets the app ping or stop it directly. This is only the bootstrap/probe path for now; pointer and scroll traffic still use the existing backend.</string>
+    <string name="experimental_shell_daemon_launch_button">Launch Experimental Shell Daemon</string>
+    <string name="experimental_shell_daemon_ping_button">Ping Experimental Shell Daemon</string>
+    <string name="experimental_shell_daemon_query_button">Query Experimental Cursor Ground Truth</string>
+    <string name="experimental_shell_daemon_stop_button">Stop Experimental Shell Daemon</string>
+    <string name="experimental_shell_daemon_status_idle">Idle</string>
+    <string name="experimental_shell_daemon_status_launching">Launching experimental shell daemon...</string>
+    <string name="experimental_shell_daemon_status_pinging">Pinging experimental shell daemon...</string>
+    <string name="experimental_shell_daemon_status_querying">Querying experimental cursor ground truth...</string>
+    <string name="experimental_shell_daemon_status_stopping">Stopping experimental shell daemon...</string>
+    <string name="calibrate_cursor_success">Calibration saved: x=%1$.4f y=%2$.4f, max error %3$.1f px</string>
+    <string name="calibrate_cursor_failed">Calibration failed. Keep cursor visible and backend connected, then try again.</string>
+    <string name="calibrate_cursor_cleared">All stored cursor calibration data was deleted.</string>
+    <string name="export_config_success">Config exported to %1$s</string>
+    <string name="export_config_failed">Config export failed.</string>
+    <string name="restore_cursor_after_edge_scroll_toggle">Restore cursor to pre-scroll position after edge scroll</string>
+
+    <string name="scroll_sensitivity_label">Vertical scroll pixels per event (higher = slower)</string>
+    <string name="scroll_sensitivity_hint">40</string>
+    <string name="vertical_followup_factor_label">Vertical follow-up factor (effective range: 1..8)</string>
+    <string name="vertical_followup_factor_hint">1.2</string>
+    <string name="horizontal_scroll_sensitivity_label">Horizontal scroll pixels per event (higher = slower)</string>
+    <string name="horizontal_scroll_sensitivity_hint">40</string>
+    <string name="horizontal_followup_factor_label">Horizontal follow-up factor (effective range: 1..8)</string>
+    <string name="horizontal_followup_factor_hint">2.0</string>
+    <string name="sync_interval_label">ADB sync interval in ms (recommended 50..500, lower = tighter sync and higher CPU)</string>
+    <string name="sync_interval_hint">150</string>
+    <string name="edge_scroll_repeat_delay_label">Edge scroll activation distance in px (finger push beyond edge before scroll starts)</string>
+    <string name="edge_scroll_repeat_delay_hint">100</string>
+    <string name="edge_scroll_jump_multiplier_label">Edge-to-scroll cursor jump multiplier</string>
+    <string name="edge_scroll_jump_multiplier_hint">1.0</string>
+    <string name="scroll_dispatch_interval_label">Scroll delta dispatch interval in ms (lower = faster updates)</string>
+    <string name="scroll_dispatch_interval_hint">2</string>
+    <string name="fling_duration_label">Fling inertia in ms (0 disables fling)</string>
+    <string name="fling_duration_hint">100</string>
+    <string name="invert_horizontal_scroll_toggle">Invert horizontal two-finger scroll direction</string>
+    <string name="invert_vertical_scroll_toggle">Invert vertical two-finger scroll direction</string>
+    <string name="invert_edge_horizontal_scroll_toggle">Invert horizontal push-edge-to-scroll direction</string>
+    <string name="invert_edge_vertical_scroll_toggle">Invert vertical push-edge-to-scroll direction</string>
+    <string name="one_finger_edge_scroll_toggle">Enable one-finger edge scroll (one-handed mode)</string>
+    <string name="side_edge_scroll_toggle">Enable edge-push scroll on left and right edges</string>
+
+    <string name="hold_drag_delay_label">Touch-and-hold drag delay in ms</string>
+    <string name="hold_drag_delay_hint">200</string>
+    <string name="drag_start_slop_label">Drag start slop in px (movement needed to start drag)</string>
+    <string name="drag_start_slop_hint">8</string>
+    <string name="hold_drag_slop_label">Touch-and-hold movement slop in px (while arming hold)</string>
+    <string name="hold_drag_slop_hint">14.0</string>
+    <string name="drag_flick_kick_label">Drag release inertia in ms (0 disables)</string>
+    <string name="drag_flick_kick_hint">50</string>
+    <string name="double_click_guard_label">Accidental double-click guard in ms</string>
+    <string name="double_click_guard_hint">0</string>
+    <string name="two_finger_scroll_grace_label">Two-finger scroll grace in px (movement before scroll starts)</string>
+    <string name="two_finger_scroll_grace_hint">24</string>
+    <string name="tap_to_drag_toggle">Enable double tap to drag</string>
+
+    <string name="haptic_touch_contact_label">Touch contact haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_touch_contact_hint">0</string>
+    <string name="haptic_click_label">Left click haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_click_hint">120</string>
+    <string name="haptic_right_click_label">Right click haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_right_click_hint">175</string>
+    <string name="haptic_drag_start_label">Drag start haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_drag_start_hint">170</string>
+    <string name="haptic_overlay_toggle_label">Overlay toggle haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_overlay_toggle_hint">140</string>
+    <string name="haptic_fault_label">Fault alert haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_fault_hint">220</string>
+    <string name="haptic_scroll_step_label">Scroll step haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_scroll_step_hint">0</string>
+    <string name="haptic_edge_hit_label">Cursor edge-hit haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_edge_hit_hint">0</string>
+    <string name="haptic_edge_scroll_start_label">Edge-scroll start haptic intensity (0..255, 0 disables)</string>
+    <string name="haptic_edge_scroll_start_hint">0</string>
+
+    <string name="bottom_nav_passthrough_toggle">Pass through touches to visible system navigation bar</string>
+    <string name="auto_start_on_boot_toggle">Auto-start app on phone boot (best effort, OEM restrictions may apply)</string>
+    <string name="debug_overlay_toggle">Enable debug diagnostics overlay</string>
+    <string name="quick_toggle_overlay_toggle">Show quick overlay toggle buttons in the navigation bar corners</string>
+    <string name="quick_toggle_right_auto_rotate_toggle">Use the right quick-toggle button for auto-rotate on/off</string>
+    <string name="foreground_service_channel_name">Touchpad Runtime Service</string>
+    <string name="foreground_service_channel_description">Keeps touch-capture runtime alive with an ongoing notification.</string>
+    <string name="foreground_service_notification_title">ADB Touchpad is running</string>
+    <string name="foreground_service_notification_text">Persistent service active to reduce background kills by battery policies.</string>
+
+    <string name="save_apply_settings">Save Settings</string>
+    <string name="settings_tab_general">General</string>
+    <string name="settings_tab_pointer">Pointer</string>
+    <string name="settings_tab_scroll">Scroll</string>
+    <string name="settings_tab_drag">Drag</string>
+    <string name="settings_tab_haptics">Haptics</string>
+    <string name="settings_tab_system">System</string>
+    <string name="settings_apply_note">Most tuning changes apply after tapping \"Save Settings\".</string>
+    <string name="settings_saved">Settings applied</string>
+    <string name="pair_failed">Pair failed. Re-check pairing port and code.</string>
+    <string name="pair_success">Pair succeeded. Now tap Connect Backend + Enable Touch Capture.</string>
+    <string name="pair_requires_port_code">Enter pairing port and pairing code first.</string>
+
+    <string name="help_title">Setup Guide</string>
+    <string name="help_subtitle">Start with pairing, then connect and enable touch capture.</string>
+    <string name="made_by_footer">Made by Alexander Zhukovskiy</string>
+</resources>
